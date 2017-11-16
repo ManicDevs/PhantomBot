@@ -328,6 +328,7 @@ class PhantomCore
 	{
 		$user = trim($user);
 		$host = trim($host);
+		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL;
 		if(!empty($host))
 		{
 			$admins = $this->config['admins'];			
