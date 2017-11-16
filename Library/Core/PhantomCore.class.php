@@ -326,8 +326,8 @@ class PhantomCore
 	
 	public function getLevel($user, $channel, $host = '')
 	{
-		$user = Helpers\Str::trim($user);
-		$host = Helpers\Str::trim($host);
+		$user = trim($user);
+		$host = trim($host);
 		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
 		
 		echo "02: " . base64_encode($host) . PHP_EOL;
