@@ -3,7 +3,7 @@
 chdir(__DIR__);
 set_time_limit(0);
 error_reporting(0);
-
+// lol
 require 'Library/Autoloader.php';
 
 if(!file_exists('Config/Configuration.php'))
