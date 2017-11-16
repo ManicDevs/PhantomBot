@@ -328,11 +328,11 @@ class PhantomCore
 	{
 		$user = trim($user);
 		$host = trim($host);
-		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL;
+		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
 		if(!empty($host))
 		{
 			$admins = $this->config['admins'];			
-
+			print_r($admins);
 			if(isset($admins[strtolower($user)]))
 			{
 				if($admins[strtolower($user)]['host'] === strtolower($host))
