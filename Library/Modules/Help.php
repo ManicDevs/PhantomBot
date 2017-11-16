@@ -108,7 +108,7 @@ class Help extends \Core\ModuleBase
 			}
 			*/
 			
-			$chanLevel = $that->getLevel($sender, $channel, $that->host($data));
+			$chanLevel = $that->getLevel($sender, $channel);
 			$userLevel = $that->getLevel($sender, '', $that->host($data));
 
 			echo '[INFO] chanLevel: ' . $chanLevel . PHP_EOL;
