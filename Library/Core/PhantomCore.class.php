@@ -335,7 +335,7 @@ class PhantomCore
 			$admins = $this->config['admins'];			
 			if(isset($admins[$user]))
 			{
-				if($admins[$user]['host'] === $host)
+				if(strtolower($admins[$user]['host']) === $host)
 				{
 					return $admins[$user]['super'] ? 8 : 7;
 				}
