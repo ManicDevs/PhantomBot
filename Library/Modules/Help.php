@@ -19,7 +19,7 @@ class Help extends \Core\ModuleBase
 		if(empty($args))
 		{
 			$commands = array('normal'=>array(), 'hop'=>array(), 'op'=>array(), 
-									'protect'=>array(), 'owner'=>array(), 'admin'=>array(), 'super'=>array());
+							'protect'=>array(), 'owner'=>array(), 'admin'=>array(), 'super'=>array());
 			foreach($that->modules as $key => $module)
 			{
 				$module = strtolower(get_class($module));
@@ -108,16 +108,16 @@ class Help extends \Core\ModuleBase
 			}
 			*/
 			
-			if(implode(', ', $commands['normal']) !== '')
-			{
-				$this->notice($socket, $sender, "Available Commands: " . str_replace('modules\\', '', implode(', ', $commands['normal'])));
-			}
-				
-			$chanLevel = $that->getLevel($sender, $channel);
+			$chanLevel = $that->getLevel($sender, $channel, $that->host($data));
 			$userLevel = $that->getLevel($sender, '', $that->host($data));
 
 			echo '[INFO] chanLevel: ' . $chanLevel . PHP_EOL;
 			echo '[INFO] userLevel: ' . $userLevel . PHP_EOL;
+			
+			if(implode(', ', $commands['normal']) !== '')
+			{
+				$this->notice($socket, $sender, "Available Commands: " . str_replace('modules\\', '', implode(', ', $commands['normal'])));
+			}
 
 			if(implode(', ', $commands['hop']) !== '' && ($chanLevel >= 3 || $userLevel >= 7))
 			{
