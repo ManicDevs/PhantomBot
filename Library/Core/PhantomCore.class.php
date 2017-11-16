@@ -329,16 +329,16 @@ class PhantomCore
 		$user = Helpers\Str::trim($user);
 		$host = Helpers\Str::trim($host);
 		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
+		
+		echo "02: " . base64_encode($host) . PHP_EOL;
+		
 		if(!empty($host))
 		{
 			$admins = $this->config['admins'];			
-			print_r($admins);
 			if(isset($admins[strtolower($user)]))
 			{
-				print_r($admins);
 				if($admins[strtolower($user)]['host'] === strtolower($host))
 				{
-					print_r($admins);
 					return $admins[strtolower($user)]['super'] ? 8 : 7;
 				}
 			}

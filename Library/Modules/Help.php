@@ -112,7 +112,7 @@ class Help extends \Core\ModuleBase
 			$chanLevel = $that->getLevel($sender, $channel);
 			$userLevel = $that->getLevel($sender, '', $that->host($data));
 			
-			echo "01: " . base64_encode($that->host($data));
+			echo "01: " . base64_encode($that->host($data)) . PHP_EOL;
 
 			echo '[INFO] chanLevel: ' . $chanLevel . PHP_EOL;
 			echo '[INFO] userLevel: ' . $userLevel . PHP_EOL;
