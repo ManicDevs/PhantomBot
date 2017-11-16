@@ -328,7 +328,6 @@ class PhantomCore
 	{
 		$user = strtolower(Helpers\Str::trim($user));
 		$host = strtolower(Helpers\Str::trim($host));
-		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
 		
 		if(!empty($host))
 		{
@@ -402,6 +401,18 @@ class PhantomCore
 			case 'nick':
 				$who = preg_quote($with['who'], '/');
 				if(preg_match("/{$who}![a-zA-Z0-9~]+@.+ NICK :(.+)/i", $data, $matches))
+				{
+					return $matches;
+				}
+				else
+				{
+					return false;
+				}
+			break;
+			
+			case 'nickinuse':
+				$who = preg_quote($with['who'], '/');
+				if(preg_match("/433 {$this->nick} {$who} :Nickname is already in use./", $data, $matches))
 				{
 					return $matches;
 				}
@@ -494,11 +505,13 @@ class PhantomCore
 			return;
 		}
 		
+		/*
 		if(preg_match("/:Nickname is already in use./", Helpers\Str::trim($data)))
 		{
 			$this->nick = $this->nick . (++$this->nickCounter);
 			$this->send('NICK ' . $this->nick);
 		}
+		*/
 		
 		if(isset($this->config['server']['invites']) && $this->config['server']['invites'] === true)
 		{

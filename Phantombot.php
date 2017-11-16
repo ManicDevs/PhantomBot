@@ -2,8 +2,8 @@
 
 chdir(__DIR__);
 set_time_limit(0);
-error_reporting(0);
-// lol
+error_reporting(E_ALL);
+
 require 'Library/Autoloader.php';
 
 if(!file_exists('Config/Configuration.php'))
