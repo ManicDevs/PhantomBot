@@ -111,7 +111,7 @@ class PhantomCore
 			{
 				$data = fgets($this->socket, $this->size);
 				if(strlen($data)>1)
-					echo '[RECV] ' . trim($data) . PHP_EOL;
+					echo '[RECV] ' . Helpers\Str::trim($data) . PHP_EOL;
 				
 				$code = explode(' ', $data);
 				if($code[1] === '266')
@@ -142,7 +142,7 @@ class PhantomCore
 			{
 				$data = fgets($this->socket, $this->size);
 				if(strlen($data)>1)
-					echo '[RECV] ' . trim($data) . PHP_EOL;
+					echo '[RECV] ' . Helpers\Str::trim($data) . PHP_EOL;
 				
 				if($this->config['oline']['username'] !== '' && $this->config['oline']['password'] !== '')
 				{
@@ -164,7 +164,7 @@ class PhantomCore
 			{
 				$data = fgets($this->socket, $this->size);
 				if(strlen($data)>1)
-					echo '[RECV] ' . trim($data) . PHP_EOL;	
+					echo '[RECV] ' . Helpers\Str::trim($data) . PHP_EOL;	
 
 				foreach($config['server']['channels'] as $channel)
 				{
@@ -264,21 +264,21 @@ class PhantomCore
 	{
 		fputs($this->socket, Helpers\Str::trim($signal) . "\n");
 		echo '[SEND] ';
-		if(strstr(trim($signal), 'PASS'))
+		if(strstr(Helpers\Str::trim($signal), 'PASS'))
 		{
 			echo 'PASS ****';
 		}
-		elseif(strstr(trim($signal), 'OPER'))
+		elseif(strstr(Helpers\Str::trim($signal), 'OPER'))
 		{
 			echo 'OPER **** *****' . PHP_EOL;
 		}
-		elseif(strstr(trim($signal), 'IDENTIFY'))
+		elseif(strstr(Helpers\Str::trim($signal), 'IDENTIFY'))
 		{
 			echo 'NICKSERV IDENTIFY ****' . PHP_EOL;
 		}
 		else
 		{
-			echo trim($signal) . "\n";
+			echo Helpers\Str::trim($signal) . "\n";
 		}
 	}
 	
@@ -321,14 +321,13 @@ class PhantomCore
 		$e = explode(' ', Helpers\Str::trim($data));
 		$e = explode('@', $e[0]);
 		$host = isset($e[1]) ? $e[1] : '';
-		echo "yay:" . $host . "\n";
 		return $host;
 	}
 	
 	public function getLevel($user, $channel, $host = '')
 	{
-		$user = trim($user);
-		$host = trim($host);
+		$user = Helpers\Str::trim($user);
+		$host = Helpers\Str::trim($host);
 		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
 		if(!empty($host))
 		{
