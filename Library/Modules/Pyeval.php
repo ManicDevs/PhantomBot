@@ -26,7 +26,7 @@ class Pyeval extends \Core\ModuleBase
 		$lines = array_splice($lines, 0, count($lines)-1);
 		foreach($lines as $linecnt => $line)
 		{
-			if($linecnt == 15)
+			if($linecnt == 10)
 				break;
 			$this->privmsg($socket, $channel, '[PY] ' . (strlen($data)?$line:'There was no output from your code!'));
 		}
