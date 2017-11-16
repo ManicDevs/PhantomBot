@@ -326,18 +326,18 @@ class PhantomCore
 	
 	public function getLevel($user, $channel, $host = '')
 	{
-		$user = Helpers\Str::trim($user);
-		$host = Helpers\Str::trim($host);
+		$user = strtolower(Helpers\Str::trim($user));
+		$host = strtolower(Helpers\Str::trim($host));
 		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
 		
 		if(!empty($host))
 		{
 			$admins = $this->config['admins'];			
-			if(isset($admins[strtolower($user)]))
+			if(isset($admins[$user]))
 			{
-				if($admins[strtolower($user)]['host'] === strtolower($host))
+				if($admins[$user]['host'] === $host)
 				{
-					return $admins[strtolower($user)]['super'] ? 8 : 7;
+					return $admins[$user]['super'] ? 8 : 7;
 				}
 			}
 		}
