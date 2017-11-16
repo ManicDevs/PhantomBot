@@ -13,7 +13,8 @@ class Help extends \Core\ModuleBase
 		$this->helpline = "returns a list of all the available commands. {$that->prefix}help command returns help about that command.";
 	}
 	
-	public function process(&$that, &$socket, $data, $input, $command, $args){
+	public function process(&$that, &$socket, $data, $input, $command, $args)
+	{
 		$sender = $that->sender($data);
 		$channel = $that->channel($data);
 		if(empty($args))

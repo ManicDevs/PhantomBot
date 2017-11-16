@@ -321,85 +321,10 @@ class PhantomCore
 		$e = explode(' ', Helpers\Str::trim($data));
 		$e = explode('@', $e[0]);
 		$host = isset($e[1]) ? $e[1] : '';
+		echo "yay:" . $host . "\n";
 		return $host;
 	}
-
-	public function getLevel($user, $channel, $host = '')
-	{
-		$user = trim($user);
-		$host = trim($host);
-		echo PHP_EOL . $user . PHP_EOL . $host . PHP_EOL . PHP_EOL;
-		
-		if(!empty($channel))
-		{
-			$this->send('WHOIS ' . $user);
-			$gotit = false;
-			while(!$gotit)
-			{
-				$data = $this->listen();
-				$channelflag = $this->expect($data, 'whoischannel', array('who' => $user, 'channel' => $channel));
-				$end = $this->expect($data, 'endofwhois', array('who' => $user));
-				if($channelflag !== false)
-				{
-					$gotit = true;
-					switch ($channelflag[2])
-					{
-						case '~':
-							return 6;
-						break;
-							
-						case '&':
-							return 5;
-						break;
-							
-						case '@':
-							return 4;
-						break;
-						
-						case '%':
-							return 3;
-						break;
-						
-						case '+':
-							return 2;
-						break;
-							
-						default:
-							return 1;
-						break;
-					}
-				}
-				elseif($end !== false)
-				{
-					$gotit = true;
-					return 1;
-				}
-				else
-				{
-					$this->process($data);
-				}
-			}
-		}
-		
-		if(!empty($host))
-		{
-			$admins = $this->config['admins'];			
-			print_r($admins);
-			if(isset($admins[strtolower($user)]))
-			{
-				print_r($admins);
-				if($admins[strtolower($user)]['host'] === strtolower($host))
-				{
-					print_r($admins);
-					return $admins[strtolower($user)]['super'] ? 8 : 7;
-				}
-			}
-		}
-		
-		return 1;
-	}
-
-/*
+	
 	public function getLevel($user, $channel, $host = '')
 	{
 		$user = trim($user);
@@ -472,7 +397,7 @@ class PhantomCore
 		}
 		return 1;
 	}
-*/
+	
 	public function expect($data, $what, $with)
 	{
 		switch($what)
