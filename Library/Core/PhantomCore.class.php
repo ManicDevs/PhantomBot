@@ -335,8 +335,10 @@ class PhantomCore
 			print_r($admins);
 			if(isset($admins[strtolower($user)]))
 			{
+				print_r($admins);
 				if($admins[strtolower($user)]['host'] === strtolower($host))
 				{
+					print_r($admins);
 					return $admins[strtolower($user)]['super'] ? 8 : 7;
 				}
 			}
