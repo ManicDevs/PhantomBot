@@ -21,6 +21,8 @@ class PhantomCore
 	public $path;
 	public $shmop;
 	
+	public $ignores = array('nicks', 'hosts');
+	
 	public function __construct(&$shmop, $config = array())
 	{
 		global $path;
@@ -563,7 +565,18 @@ class PhantomCore
 		
 		if(Helpers\Str::beginsWith($this->prefix, $input))
 		{
+			$data = Helpers\Str::trim($data);
+			$sender = $this->sender($data);
+			$senderhost = $this->host($data);
+			$channel = $this->channel($data);
 			$command = strtolower($this->command($input));
+			
+			if(isset($this->ignores['nicks'][$sender]) || isset($this->ignores['hosts'][$senderhost]))
+			{
+				$this->privmsg($channel, "{$sender}, Ignorance is bliss!");
+				return;
+			}
+				
 			if(/*!*/(/*$command == 'module') && */(isset($this->modules[$command]) /*|| (isset($this->modules_alias[$command]) && isset($this->modules[$this->modules_alias[$command]])*/)))
 			{
 				/*
@@ -584,7 +597,7 @@ class PhantomCore
 					{
 						if($hook['hook'] == 'beforeCommand')
 						{
-							$okay = $this->modules[$hook['module']]->beforeCommand($this, $this->socket, Helpers\Str::trim($data), $input, $command, Helpers\Str::after($this->prefix . $this->command($input), $input));
+							$okay = $this->modules[$hook['module']]->beforeCommand($this, $this->socket, $data, $input, $command, Helpers\Str::after($this->prefix . $this->command($input), $input));
 							if($okay == false)
 							{
 								break;
@@ -597,7 +610,7 @@ class PhantomCore
 				{
 					if(isset($this->modules[$command]))
 					{
-						$this->modules[$command]->process($this, $this->socket, Helpers\Str::trim($data), $input, $command, Helpers\Str::after($this->prefix . $this->command($input), $input));
+						$this->modules[$command]->process($this, $this->socket, $data, $input, $command, Helpers\Str::after($this->prefix . $this->command($input), $input));
 					}
 					/*elseif(isset($this->modules_alias[$command]) && isset($this->modules[$this->modules_alias[$command]]))
 					{
