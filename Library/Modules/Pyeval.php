@@ -20,7 +20,7 @@ class Pyeval extends \Core\ModuleBase
 		$input = stripslashes($input);
 		$input = stripcslashes($input);
 		
-		$data = file_get_contents('http://eval.appspot.com/eval?statement=' . urlencode($input));
+		$data = file_get_contents('http://eval.appspot.com/eval?statement=' . urlencode($input), NULL, NULL, 0, 512);
 		
 		$lines = explode("\n", $data);
 		$lines = array_splice($lines, 0, count($lines)-1);

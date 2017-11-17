@@ -4,7 +4,7 @@ namespace Modules;
 
 class Part extends \Core\ModuleBase
 {
-	public $helpline = 'changes the bots nickname.';
+	public $helpline = 'parts the bot from a channel.';
 	
 	public $minAcl = 7;	
 

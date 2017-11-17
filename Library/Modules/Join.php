@@ -4,7 +4,7 @@ namespace Modules;
 
 class Join extends \Core\ModuleBase
 {
-	public $helpline = 'changes the bots nickname.';
+	public $helpline = 'joins the bot to a channel.';
 	
 	public $minAcl = 7;	
 
