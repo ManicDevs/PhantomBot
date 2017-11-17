@@ -191,11 +191,11 @@ class Relay extends \Core\ModuleBase
 						
 						if($relayhere)
 						{
-							$this->privmsg($socket, $this->channel, "[$recipient@$host]<" . substr($sender, 1) . "> $message");
+							$this->privmsg($this->socket, $this->channel, "[$recipient@$host]<" . substr($sender, 1) . "> $message");
 						}
 						else
 						{
-							$this->privmsg($socket, $channel, "a[$recipient@$host]<".substr($sender, 1)."> $message");
+							$this->privmsg($this->socket, $channel, "a[$recipient@$host]<".substr($sender, 1)."> $message");
 						}
 					}
 				}
