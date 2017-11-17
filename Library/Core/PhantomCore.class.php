@@ -414,7 +414,7 @@ class PhantomCore
 			
 			case 'nickinuse':
 				$who = preg_quote($with['who'], '/');
-				if(preg_match("/433 {$this->nick} {$who} :Nickname is already in use./", $data, $matches))
+				if(preg_match("/:[a-zA-Z0-9\.]+ 433 {$this->nick} {$who} :Nickname is already in use./", $data, $matches))
 				{
 					return $matches;
 				}
