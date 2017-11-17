@@ -16,9 +16,9 @@ class Relay extends \Core\ModuleBase
 	
 	public function __destruct()
 	{
-		foreach($this->pids as $pid => $network)
+		foreach($this->pids as $network => $pid)
 		{
-			exec("kill -9 $pid");
+			shell_exec("kill -9 $pid");
 		}
 	}
 	
