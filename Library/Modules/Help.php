@@ -140,7 +140,7 @@ class Help extends \Core\ModuleBase
 				$this->notice($socket, $sender, "+q Commands: " . str_replace('modules\\', '', implode(', ', $commands['owner'])));
 			}
 			
-			if(implode(', ', $commands['admin']) !== '' && $userLevel == 7)
+			if(implode(', ', $commands['admin']) !== '' && $userLevel >= 7)
 			{
 				$this->notice($socket, $sender, "Admin Commands: " . str_replace('modules\\', '', implode(', ', $commands['admin'])));
 			}

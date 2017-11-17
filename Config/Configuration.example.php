@@ -7,6 +7,7 @@ return array(
 		'portnum' 	=> 6667,
 		'password'	=> '',
 		'prefix'	=> '@',
+		'invites'	=> true,
 		'channels'	=> array(
 			'#bot'
 		)
