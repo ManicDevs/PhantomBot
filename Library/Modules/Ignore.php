@@ -33,7 +33,7 @@ class Ignore extends \Core\ModuleBase
 				case 'del':
 					$this->privmsg($socket, $channel, "TODO: Del");
 					if(isset($input[2]))
-						$that->ignores['nicks'][$input[2]] = array();
+						unset($that->ignores['nicks'][$input[2]]);
 				break;
 				
 				default:
