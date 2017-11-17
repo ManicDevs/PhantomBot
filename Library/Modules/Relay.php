@@ -6,7 +6,7 @@ class Relay extends \Core\ModuleBase
 {
 	public $helpline = 'relays an irc network channel to another.';
 	
-	public $minAcl = 8;	
+	public $minAcl = 7;	
 	
 	private $socket = null;
 	private $channel = null;
@@ -27,7 +27,7 @@ class Relay extends \Core\ModuleBase
 		$sender = $that->sender($data);
 		$channel = $that->channel($data);
 		$input = explode(' ', $that->input($data));
-		if($that->getLevel($sender, '', $that->host($data)) > 7)
+		if($that->getLevel($sender, '', $that->host($data)) > 6)
 		{
 			switch(@$input[1])
 			{
