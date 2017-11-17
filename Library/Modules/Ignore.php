@@ -94,7 +94,7 @@ class Ignore extends \Core\ModuleBase
 				break;
 				
 				default:
-					$this->send($socket, "NOTICE {$sender} :Arguments list | add [nick|host] | del [nick|host]");
+					$this->privmsg($socket, $channel, "{$sender}, Arguments list: add [nick|host] | del [nick|host]");
 				break;
 			}
 		}
