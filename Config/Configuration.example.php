@@ -4,7 +4,7 @@ return array(
 
 	'server'	=> array(
 		'address' 	=> '127.0.0.1',
-		'portnum' 	=> 6667,
+		'portnum' 	=> '6667',	// '+6697'
 		'password'	=> '',
 		'prefix'	=> '@',
 		'invites'	=> true,

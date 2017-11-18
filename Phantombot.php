@@ -18,8 +18,6 @@ shmop_write($shmop, '0', 0);
 
 $bot = new Core\PhantomCore($shmop, $config);
 
-$bot->load(true);
-
 //declare(ticks=1);
 
 pcntl_signal(SIGINT, function()
@@ -29,6 +27,9 @@ pcntl_signal(SIGINT, function()
     	$bot->disconnect();
     exit;
 });
+
+$bot->load(true);
+$bot->connect();
 
 while(true)
 {

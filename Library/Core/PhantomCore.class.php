@@ -8,6 +8,8 @@ $path = str_replace('\\', '/', str_replace(array('Library/Core/PhantomCore.class
 class PhantomCore
 {
 	public $socket;
+	public $address;
+	public $portno;
 	public $nick;
 	public $nickCounter = 0;
 	public $size = 512;
@@ -38,45 +40,53 @@ class PhantomCore
 		
 		$this->nick = Helpers\Str::trim($config['ident']['nickname']);
 		
-		$address = $config['server']['address'];
-		$portnum = $config['server']['portnum'];
+		$this->address = $config['server']['address'];
+		$this->portno = $config['server']['portnum'];
 		
-		$ssl = Helpers\Str::beginsWith('+', $portnum);
+		$ssl = Helpers\Str::beginsWith('+', $this->portno);
 		if($ssl)
 		{
-			$address = 'ssl://' . $address;
-			$portnum = Helpers\Str::after('+', $portnum);
+			$this->address = 'ssl://' . $this->address;
+			$this->portno = Helpers\Str::after('+', $this->portno);
 		}
 		
 		if(isset($config['server']['prefix']))
 		{
 			$this->prefix = Helpers\Str::trim($config['server']['prefix']);
 		}
-		
+	}
+	
+	public function connect()
+	{
 		$ctxOptions = array(
     		'ssl' => array(
         		'verify_peer' => false,
-        		'verify_peer_name' => false
+        		'verify_peer_name' => false,
+        		'allow_self_signed'=> true
     		)
 		);
 		$ctx = stream_context_create($ctxOptions);
 		$this->socket = stream_socket_client(
-			$address.':'.$portnum, $errNo, $errStr, 60,
+			$this->address.':'.$this->portno, $errNo, $errStr, 15,
 			STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx
 		);
 		
-		stream_set_blocking($this->socket, true);
+		//stream_set_blocking($this->socket, true);
 		
-		if($this->socket)
+		if($this->socket == FALSE)
 		{
-			if(isset($config['server']['password']) && strlen($config['server']['password']))
+			die("Error: [$errNo] $errStr");
+		}
+		else
+		{
+			if(isset($this->config['server']['password']) && strlen($this->config['server']['password']))
 			{
-				$this->send("PASS {$config['server']['password']}");
+				$this->send("PASS {$this->config['server']['password']}");
 			}
 			
 			$this->send("NICK {$this->nick}");
-			$ident = isset($config['ident']['username']) ? $config['ident']['username'] : $this->nick;
-			$this->send('USER ' . $ident . ' * * :' . $config['ident']['realname']);
+			$ident = isset($this->config['ident']['username']) ? $this->config['ident']['username'] : $this->nick;
+			$this->send('USER ' . $ident . ' * * :' . $this->config['ident']['realname']);
 			
 			$count = 0;
 			$pinged = false;
@@ -108,7 +118,7 @@ class PhantomCore
 			}
 			
 			$count = 0;
-			$nickserv = (!isset($config['ident']['nickserv']['password'])||$config['ident']['nickserv']['password']==='')?true:false;
+			$nickserv = (!isset($this->config['ident']['nickserv']['password'])||$this->config['ident']['nickserv']['password']==='')?true:false;
 			while(!$nickserv)
 			{
 				$data = fgets($this->socket, $this->size);
@@ -123,13 +133,13 @@ class PhantomCore
 				
 				if($code[1] !== '401')
 				{
-					$this->privmsg('NickServ', 'IDENTIFY ' . $config['ident']['nickserv']['password']);
+					$this->privmsg('NickServ', 'IDENTIFY ' . $this->config['ident']['nickserv']['password']);
 					$nickserv = true;
 				}
 				
 				if(preg_match("/^\:NickServ\!NickServ@.* NOTICE {$this->nick} :This nickname is registered./i", Helpers\Str::trim($data)))
 				{
-					$this->privmsg('NickServ', 'IDENTIFY ' . $config['ident']['nickserv']['password']);
+					$this->privmsg('NickServ', 'IDENTIFY ' . $this->config['ident']['nickserv']['password']);
 					$nickserv = true;
 				}
 				
@@ -149,7 +159,7 @@ class PhantomCore
 				if($this->config['oline']['username'] !== '' && $this->config['oline']['password'] !== '')
 				{
 					$code = explode(' ', $data);
-					if($code[1] === '266')
+					if(@$code[1] === '266')
 					{
 						$this->send('OPER ' . $this->config['oline']['username'] . ' ' . $this->config['oline']['password']);
 						$opered = true;
@@ -168,7 +178,7 @@ class PhantomCore
 				if(strlen($data)>1)
 					echo '[RECV] ' . Helpers\Str::trim($data) . PHP_EOL;	
 
-				foreach($config['server']['channels'] as $channel)
+				foreach($this->config['server']['channels'] as $channel)
 				{
 					$password = '';
 					if(count(explode(':', $channel)) > 1)
@@ -243,7 +253,7 @@ class PhantomCore
 			die('Reached end of socket.' . PHP_EOL);
 		}
 		
-		stream_set_blocking($this->socket, false);
+		//stream_set_blocking($this->socket, false);
 		$data = fgets($this->socket, $this->size);
 		if(strlen($data)>1)
 			echo '[RECV] ' . $data;

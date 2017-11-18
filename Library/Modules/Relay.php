@@ -122,18 +122,21 @@ class Relay extends \Core\ModuleBase
 	{
 		if(substr($port, 0, 1) === '+')
 		{
-			$context = stream_context_create(['ssl' => [
-                    'verify_peer'      => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed'=> true
-			]]);
+			$ctxOptions = array(
+				'ssl' => array(
+		    		'verify_peer' => false,
+		    		'verify_peer_name' => false,
+		    		'allow_self_signed' => true
+				)
+			);
+			$context = stream_context_create($ctxOptions);
 			$port = intval(substr($port, 1));
-			$socket = stream_socket_client("ssl://$host:$port", $errno, $errstr, 5, STREAM_CLIENT_CONNECT, $context);
+			$socket = stream_socket_client("ssl://$host:$port", $errno, $errstr, 5, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $context);
 		}
 		else
 		{
 			$port = intval($port);
-			$socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5, STREAM_CLIENT_CONNECT);
+			$socket = stream_socket_client("tcp://$host:$port", $errno, $errstr, 5, STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT);
 		}
 		
 		if($socket == FALSE)
