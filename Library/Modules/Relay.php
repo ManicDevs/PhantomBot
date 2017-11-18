@@ -160,9 +160,9 @@ class Relay extends \Core\ModuleBase
 		fputs($socket,"USER $ident 8 * :$ident\r\n");
 		fputs($socket,"NICK $nickname\r\n");
 		
-		while(true)
+		while(!feof($socket))
 		{
-			while($data = substr_replace(fgets($socket), '', -2))
+			while($data = fgets($socket))
 			{	
 				$splitdata = explode(' ', $data);
 				
@@ -192,13 +192,16 @@ class Relay extends \Core\ModuleBase
 							$sender = $sender[0];
 						}
 						
-						if($relayhere)
+						if($sender != $this->sender)
 						{
-							$this->privmsg($this->socket, $this->channel, "[$recipient@$host]<" . substr($sender, 1) . "> $message");
-						}
-						else
-						{
-							$this->privmsg($this->socket, $channel, "[$recipient@$host]<".substr($sender, 1)."> $message");
+							if($relayhere)
+							{
+								$this->privmsg($this->socket, $this->channel, "[$recipient@$host]<" . substr($sender, 1) . "> $message");
+							}
+							else
+							{
+								$this->privmsg($this->socket, $channel, "[$recipient@$host]<".substr($sender, 1)."> $message");
+							}
 						}
 					}
 				}

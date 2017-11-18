@@ -71,7 +71,7 @@ class PhantomCore
 			STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT, $ctx
 		);
 		
-		//stream_set_blocking($this->socket, true);
+		stream_set_blocking($this->socket, true);
 		
 		if($this->socket == FALSE)
 		{
@@ -253,7 +253,8 @@ class PhantomCore
 			die('Reached end of socket.' . PHP_EOL);
 		}
 		
-		//stream_set_blocking($this->socket, false);
+		stream_set_blocking($this->socket, false);
+		
 		$data = fgets($this->socket, $this->size);
 		if(strlen($data)>1)
 			echo '[RECV] ' . $data;

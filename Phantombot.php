@@ -18,7 +18,7 @@ shmop_write($shmop, '0', 0);
 
 $bot = new Core\PhantomCore($shmop, $config);
 
-//declare(ticks=1);
+declare(ticks=1);
 
 pcntl_signal(SIGINT, function()
 {
