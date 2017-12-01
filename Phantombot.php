@@ -28,7 +28,8 @@ pcntl_signal(SIGINT, function()
     exit;
 });
 
-$bot->load(true);
+$bot->loadmodules();
+$bot->loadlisteners();
 $bot->connect();
 
 while(true)

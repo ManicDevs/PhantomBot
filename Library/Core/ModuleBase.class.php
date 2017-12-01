@@ -2,7 +2,7 @@
 
 namespace Core;
 
-class ModuleBase
+abstract class ModuleBase
 {
 	protected $size = 512;
 	
@@ -29,5 +29,6 @@ class ModuleBase
 	{
 		$data = fgets($socket, $this->size);
 		print_r($data);
+		return $data;
 	}
 }

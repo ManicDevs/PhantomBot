@@ -19,6 +19,11 @@ class PhantomCore
 	public $modules_prefix = array();
 	public $modules_alias = array();
 	public $modules_hooks = array();
+	public $listeners;
+	public $listeners_regex = array();
+	public $listeners_prefix = array();
+	public $listeners_alias = array();
+	public $listeners_hooks = array();
 	public $config;
 	public $path;
 	public $shmop;
@@ -36,6 +41,11 @@ class PhantomCore
 		if(!class_exists('Core\ModuleBase'))
 		{
 			new Core\ModuleBase();
+		}
+		
+		if(!class_exists('Core\ListenerBase'))
+		{
+			new Core\ListenerBase();
 		}
 		
 		$this->nick = Helpers\Str::trim($config['ident']['nickname']);
@@ -196,7 +206,7 @@ class PhantomCore
 		}
 	}
 	
-	public function load($modules)
+	public function loadmodules()
 	{
 		$allowed_hooks = array(
 			'beforeCommand',
@@ -240,6 +250,56 @@ class PhantomCore
 					else
 					{
 						echo "[INFO] {$module}'s hook is not supported.";
+					}
+				}
+			}
+		}
+	}
+	
+	public function loadlisteners()
+	{
+		$allowed_hooks = array(
+			'beforeCommand',
+			//'beforePrefix',
+		);
+		
+		foreach(glob($this->path . 'Library/Listeners/*.php') as $listener)
+		{
+			require_once($listener);
+			$listener = strtolower(Helpers\Str::trim(str_replace('.php', '', basename($listener))));
+			$class = 'Listeners\\' . ucfirst($listener);
+			$this->listeners[$listener] = new $class($this);
+			echo "[INFO] Loaded: {$class}\n";
+			
+			/*if(!empty($this->listeners[$listener]->regex))
+			{
+				$this->listeners_regex[$listener] = $this->listeners[$listener]->regex;
+			}*/
+			
+			/*if(!empty($this->listeners[$listener]->prefix))
+			{
+				$this->listeners_prefix[$listener] = $this->listeners[$listener]->prefix;
+			}*/
+			
+			/*if(!empty($this->listeners[$listener]->alias) && is_array($this->listeners[$listener]->alias))
+			{
+				foreach($this->listeners[$listener]->alias as $alias)
+				{
+					$this->listeners_alias[$alias] = $listener;
+				}
+			}*/
+			
+			if(!empty($this->listeners[$listener]->hooks) && is_array($this->listeners[$listener]->hooks))
+			{
+				foreach ($this->listeners[$listener]->hooks as $hook)
+				{
+					if(isset($allowed_hooks[$hook]))
+					{
+						$this->listeners_hooks[$hook][] = array('hook' => $hook, 'module' => $listener);
+					}
+					else
+					{
+						echo "[INFO] {$listener}'s hook is not supported.";
 					}
 				}
 			}
@@ -574,12 +634,14 @@ class PhantomCore
 			}
 		}*/
 		
+		$data = Helpers\Str::trim($data);
+		$sender = $this->sender($data);
+		$senderhost = $this->host($data);
+		$channel = $this->channel($data);
+		
 		if(Helpers\Str::beginsWith($this->prefix, $input))
 		{
-			$data = Helpers\Str::trim($data);
-			$sender = $this->sender($data);
-			$senderhost = $this->host($data);
-			$channel = $this->channel($data);
+			// commands
 			$command = strtolower($this->command($input));
 			
 			if(isset($this->ignores['nicks'][$sender]) || isset($this->ignores['hosts'][$senderhost]))
@@ -630,5 +692,26 @@ class PhantomCore
 				}
 			}
 		}
+		else
+		{	// listeners
+			$arguments = explode(' ', $data);
+			print_r($this->listeners);
+            foreach($this->listeners as $listener)
+            {
+                if(is_array($listener->getKeywords()))
+                {
+                    foreach($listener->getKeywords() as $keyword)
+                    {
+                        //compare listeners keyword and 1st arguments of server response
+                        if($keyword === $arguments[1])
+                        {
+                        	$reflector = new \ReflectionClass($listener);
+                        	$listener = $reflector->newInstanceArgs();
+							$listener->process($this, $this->socket, $data, $input);
+						}
+                    }
+                }
+            }
+		} // else
 	}
 }
