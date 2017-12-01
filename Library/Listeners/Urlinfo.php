@@ -8,7 +8,10 @@ class Urlinfo extends \Core\ListenerBase
 	{
 		$sender = $that->sender($data);
 		$channel = $that->channel($data);
-		preg_match_all('@((https?://)?([-\\w]+\\.[-\\w\\.]+)+\\w(:\\d+)?(/([-\\w/_\\.]*(\\?\\S+)?)?)*)@', $data, $matches);
+		preg_match_all('#((https?://)?([-\\w]+\\.[-\\w\\.]+)+\\w(:\\d+)?(/([-\\w/_\\.]*(\\?\\S+)?)?)*)#', $data, $matches);
+		if(!isset($matches[0][0]))
+			return;
+		
 		foreach($matches[0] as $match)
 		{
 			$urlData = $this->fetch($match);
