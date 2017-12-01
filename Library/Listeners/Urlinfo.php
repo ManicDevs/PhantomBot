@@ -24,9 +24,9 @@ class Urlinfo extends \Core\ListenerBase
 	
 	private function getUrlTitle($data)
 	{
-		preg_match('/<title>(.*)<\/title>/', $data, $matches);
-		if(isset($matches[0]))
-			return $matches[1];
+		preg_match('#(\<title.*?\>)(\n*\r*.+\n*\r*)(\<\/title.*?\>)#', $data, $matches);
+		if(isset($matches[2]))
+			return $matches[2];
 		
 		return false;
 	}
