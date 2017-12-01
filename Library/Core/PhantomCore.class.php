@@ -695,7 +695,7 @@ class PhantomCore
 		else
 		{	// listeners
 			$arguments = explode(' ', $data);
-			print_r($this->listeners);
+			
             foreach($this->listeners as $listener)
             {
                 if(is_array($listener->getKeywords()))
